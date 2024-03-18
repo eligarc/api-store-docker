@@ -7,15 +7,15 @@ const setupModels = require('./../db/models');
 const USER = encodeURIComponent(config.dbUser);
 const PASSWORD = encodeURIComponent(config.dbPassword);
 
-const connectionString = `mysql://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
+const connectionString = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
 
 const sequelize = new Sequelize(connectionString, {
-    dialect: 'mysql',
+    dialect: 'postgres',
     logging: console.log,
 });
 
 setupModels(sequelize);
-
-sequelize.sync();
+// Se desactiva el modo syc no es recomendable usarlo en entorno de prod
+// sequelize.sync();
 
 module.exports = sequelize;

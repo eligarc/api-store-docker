@@ -17,7 +17,7 @@ services:
       - PGADMIN_DEFAULT_EMAIL=${DB_EMAIL_PG}
       - PGADMIN_DEFAULT_PASSWORD=${DB_PASS_PG}
     ports:
-      - 5050:${DB_PASS_PG}
+      - 5050:${DB_PORT_PG}
   mysql:
     image: mysql:5
     environment:
