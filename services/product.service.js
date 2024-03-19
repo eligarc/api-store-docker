@@ -38,7 +38,7 @@ class ProductsService {
     return newProduct;
   }
 
-  async find() {
+  async find(query) {
     // const query = 'SELECT * FROM tasks';
 
     // const [data] = await sequelize.query(query);
@@ -46,9 +46,18 @@ class ProductsService {
     // return response.rows;
     // return { data, metadata };
 
-    const products = await models.Product.findAll({
-      include: ['category']
-    });
+    const { limit, offset } = query;
+
+    const options = {
+      include: ['category'],
+    }
+
+    if (limit && offset) {
+      options.limit = limit;
+      options.offset = offset;
+    }
+
+    const products = await models.Product.findAll(options);
     return products;
   }
 
