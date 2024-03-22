@@ -1,22 +1,29 @@
 const express = require('express');
+const password = require('passport');
 
 const CategoryService = require('./../services/category.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const { createCategorySchema, updateCategorySchema, getCategorySchema } = require('./../schemas/category.schema');
+const { checkRoles } = require('./../middlewares/auth.handler');
 
 const router = express.Router();
 const service = new CategoryService();
 
-router.get('/', async (req, res, next) => {
-  try {
-    const categories = await service.find();
-    res.json(categories);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/',
+  password.authenticate('jwt', { session: false }),
+  checkRoles('admin', 'seller', 'customer'),
+  async (req, res, next) => {
+    try {
+      const categories = await service.find();
+      res.json(categories);
+    } catch (error) {
+      next(error);
+    }
+  });
 
 router.get('/:id',
+  password.authenticate('jwt', { session: false }),
+  checkRoles('admin', 'seller', 'customer'),
   validatorHandler(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
@@ -30,6 +37,8 @@ router.get('/:id',
 );
 
 router.post('/',
+  password.authenticate('jwt', { session: false }),
+  checkRoles('admin', 'customer'),
   validatorHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
@@ -63,7 +72,7 @@ router.delete('/:id',
     try {
       const { id } = req.params;
       await service.delete(id);
-      res.status(201).json({id});
+      res.status(201).json({ id });
     } catch (error) {
       next(error);
     }
