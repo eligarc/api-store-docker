@@ -21,26 +21,15 @@ function boomErrorHandler(err, req, res, next) {
   }
 }
 
-
 function ormErrorHandler(err, req, res, next) {
-  if (err instanceof ValidationError && err.isBoom) {
+  if (err instanceof ValidationError) {
     res.status(409).json({
       statusCode: 409,
-      menssage: err.name,
+      message: err.name,
       errors: err.errors
-    })
+    });
   }
-
-  else if(err instanceof ForeignKeyConstraintError && err.isBoom ) {
-    res.status(422).json({
-      statusCode: 422,
-      menssage: err.name,
-      errors: err.errors
-    })
-  }
-
   next(err);
 }
-
 
 module.exports = { logErrors, errorHandler, boomErrorHandler, ormErrorHandler }

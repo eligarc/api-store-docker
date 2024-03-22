@@ -39,8 +39,8 @@ const queryProductSchema = Joi.object({
   offset,
   price,
   priceMin,
-  priceMax: priceMin.when('price_min', {
-    is:price_min.required(),
+  priceMax: priceMax.when('price_min', {
+    is: Joi.number().integer(),
     then: Joi.required()
   })
 });
